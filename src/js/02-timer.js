@@ -11,7 +11,9 @@ const refs = {
 };
 let timerId = null;
 
+
 refs.startBtn.disabled = 'true';
+
 
 const options = {
   enableTime: true,
