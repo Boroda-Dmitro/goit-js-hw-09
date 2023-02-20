@@ -1,7 +1,6 @@
 import Notiflix from 'notiflix';
 
 const form = document.querySelector('form');
-let timerId = null;
 let promisNumber = 1;
 
 const onSubmitCreatePromise = event => {
@@ -12,6 +11,10 @@ const onSubmitCreatePromise = event => {
   } = event.currentTarget;
   let promisDelay = Number(delay.value) + Number(step.value);
 
+  if (Number(amount.value == 0)) {
+    return;
+  }
+
   createPromise(promisNumber, delay.value)
     .then(value => {
       Notiflix.Notify.success(value);
@@ -20,7 +23,7 @@ const onSubmitCreatePromise = event => {
       Notiflix.Notify.failure(value);
     });
 
-  timerId = setInterval(() => {
+  for (let i = 1; i < amount.value; i++) {
     promisNumber += 1;
     createPromise(promisNumber, promisDelay)
       .then(value => {
@@ -29,14 +32,10 @@ const onSubmitCreatePromise = event => {
       .catch(value => {
         Notiflix.Notify.failure(value);
       });
-  
     promisDelay += Number(step.value);
-    if (promisNumber === Number(amount.value)) {
-      clearInterval(timerId);
-      promisDelay = 0;
-      promisNumber = 1;
-    }
-  }, step.value);
+  }
+
+  promisNumber = 1;
 };
 
 form.addEventListener('submit', onSubmitCreatePromise);
@@ -54,8 +53,26 @@ function createPromise(position, delay) {
   });
 }
 
-
 // альтернативний варіант
+
+// timerId = setInterval(() => {
+//   promisNumber += 1;
+//   createPromise(promisNumber, promisDelay)
+//     .then(value => {
+//       Notiflix.Notify.success(value);
+//     })
+//     .catch(value => {
+//       Notiflix.Notify.failure(value);
+//     });
+
+//   promisDelay += Number(step.value);
+//   if (promisNumber === Number(amount.value)) {
+//     clearInterval(timerId);
+// promisDelay = 0;
+// promisNumber = 1;
+//   }
+// }, step.value);
+
 // const onSubmitCreatePromise = event => {
 //   event.preventDefault();
 
